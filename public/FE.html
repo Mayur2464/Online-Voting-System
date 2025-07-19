@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Indian Online Voting System</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      transition: all 0.3s ease;
+    }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f2f7f5;
+      color: #333;
+    }
+    header {
+      background: linear-gradient(90deg, #ff9933, #ffffff, #138808);
+      color: #000;
+      padding: 20px 10px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    nav {
+      background-color: #ffffff;
+      text-align: center;
+      padding: 15px 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    nav a {
+      margin: 0 15px;
+      text-decoration: none;
+      color: #138808;
+      font-weight: bold;
+      font-size: 16px;
+      position: relative;
+    }
+    nav a::after {
+      content: "";
+      display: block;
+      width: 0;
+      height: 2px;
+      background: #ff9933;
+      transition: width 0.3s;
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+    }
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 30px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 0.5s ease-in;
+    }
+
+    h1, h2 {
+      text-align: center;
+      color: #0d6a00;
+    }
+
+    form {
+      margin-top: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    button {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 15px;
+    }
+
+    input:focus {
+      border-color: #138808;
+      outline: none;
+    }
+
+    button {
+      background-color: #138808;
+      color: white;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #0e5003;
+      transform: scale(1.02);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .party {
+      border: 1px solid #ddd;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 15px 0;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      background-color: #fdfdfd;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .party:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .party img {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+      border-radius: 5px;
+    }
+
+    .party-info {
+      flex: 1;
+    }
+
+    .party input {
+      transform: scale(1.2);
+      margin-right: 10px;
+      cursor: pointer;
+    }
+
+    #results-display {
+      font-size: 20px;
+      font-weight: bold;
+      color: #138808;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      .party {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .party img {
+        margin-bottom: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    Indian Online Voting System
+  </header>
+
+  <nav>
+    <a href="#" onclick="showSection('home')">Home</a>
+    <a href="#" onclick="showSection('register')">Register</a>
+    <a href="#" onclick="showSection('login')">Login</a>
+    <a href="#" onclick="showSection('vote')">Vote</a>
+    <a href="#" onclick="showSection('result')">Results</a>
+  </nav>
+
+  <div class="container">
+    <section id="home">
+      <h2>Welcome to the Indian Online Voting System</h2>
+      <p>Cast your vote securely from anywhere.</p>
+    </section>
+
+    <section id="register" class="hidden">
+      <h2>Register</h2>
+      <form onsubmit="handleRegister(event)">
+        <label for="reg-username">Username:</label>
+        <input type="text" id="reg-username" required>
+        <label for="reg-password">Password:</label>
+        <input type="password" id="reg-password" required>
+        <button type="submit">Register</button>
+      </form>
+    </section>
+
+    <section id="login" class="hidden">
+      <h2>Login</h2>
+      <form onsubmit="handleLogin(event)">
+        <label for="login-username">Username:</label>
+        <input type="text" id="login-username" required>
+        <label for="login-password">Password:</label>
+        <input type="password" id="login-password" required>
+        <button type="submit">Login</button>
+      </form>
+    </section>
+
+    <section id="vote" class="hidden">
+      <h2>Vote for Your Preferred Party</h2>
+      <form onsubmit="handleVote(event)">
+        <div class="party">
+          <input type="radio" name="candidate" value="BJP" required>
+          <img src="images/BJP.png" alt="BJP Logo">
+          <div class="party-info">
+            <strong>BJP</strong>
+            <p>Nationalism & development</p>
+          </div>
+        </div>
+        <div class="party">
+          <input type="radio" name="candidate" value="INC">
+          <img src="images/congress.png" alt="INC Logo">
+          <div class="party-info">
+            <strong>INC</strong>
+            <p>Secularism & growth</p>
+          </div>
+        </div>
+        <div class="party">
+          <input type="radio" name="candidate" value="AAP">
+          <img src="images/AAP.jpeg" alt="AAP Logo">
+          <div class="party-info">
+            <strong>AAP</strong>
+            <p>Anti-corruption & services</p>
+          </div>
+        </div>
+        <button type="submit">Submit Vote</button>
+      </form>
+    </section>
+
+    <section id="result" class="hidden">
+      <h2>Results</h2>
+      <div id="results-display">Results will be displayed here.</div>
+    </section>
+  </div>
+
+  <script>
+    const AUTH_API = 'http://localhost:5000/api/auth';
+    const VOTE_API = 'http://localhost:5000/api/vote';
+
+    function showSection(id) {
+      document.querySelectorAll("section").forEach(s => s.classList.add("hidden"));
+      document.getElementById(id).classList.remove("hidden");
+    }
+
+    async function handleRegister(e) {
+      e.preventDefault();
+      const username = document.getElementById("reg-username").value;
+      const password = document.getElementById("reg-password").value;
+
+      const res = await fetch(`${AUTH_API}/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
+      });
+
+      const data = await res.json();
+      alert(data.msg || data.error);
+      if (res.ok) showSection("login");
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      const username = document.getElementById("login-username").value;
+      const password = document.getElementById("login-password").value;
+
+      const res = await fetch(`${AUTH_API}/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
+      });
+
+      const data = await res.json();
+      if (res.ok && data.token) {
+        localStorage.setItem("token", data.token);
+        alert("Login successful!");
+        showSection("vote");
+      } else {
+        alert(data.msg || "Login failed");
+      }
+    }
+
+    async function handleVote(e) {
+  e.preventDefault();
+
+  const party = document.querySelector("input[name='candidate']:checked")?.value;
+  const token = localStorage.getItem("token");
+
+  // ✅ Validate token and party selection
+  if (!token) {
+    alert("You must be logged in to vote.");
+    showSection("login");
+    return;
+  }
+
+  if (!party) {
+    alert("Please select a party to vote.");
+    return;
+  }
+
+  try {
+    const res = await fetch(`${VOTE_API}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}` // ✅ Token sent in Authorization header
+      },
+      body: JSON.stringify({ party })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      alert(data.msg || "Vote submitted successfully.");
+      showSection("result");
+      loadResults();
+    } else {
+      alert(data.msg || data.error || "Failed to submit vote.");
+    }
+  } catch (err) {
+    console.error("Vote error:", err);
+    alert("An error occurred while submitting your vote.");
+  }
+}
+
+    async function loadResults() {
+      const res = await fetch(`${VOTE_API}/results`);
+      const data = await res.json();
+      const output = data.map(v => `${v._id}: ${v.count} vote(s)`).join("<br>");
+      document.getElementById("results-display").innerHTML = output || "No votes yet.";
+    }
+  </script>
+</body>
+</html>
